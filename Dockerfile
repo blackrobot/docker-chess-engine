@@ -20,4 +20,4 @@ RUN rm -Rf /tmp/Stockfish-master /tmp/sf.tar.gz
 # Expose the mini-inetd port
 EXPOSE 8080
 
-CMD ["/usr/bin/mini-inetd", "8080", "/usr/local/bin/stockfish"]
+CMD ["/usr/bin/mini-inetd", "-d", "8080", "/usr/local/bin/stockfish", "go"]
