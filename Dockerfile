@@ -14,6 +14,9 @@ RUN cd /tmp/Stockfish-master/src && \
     make profile-build ARCH=x86-64 && \
     make install
 
+# Cleanup
+RUN rm -Rf /tmp/Stockfish-master /tmp/sf.tar.gz
+
 # Expose the mini-inetd port
 EXPOSE 8080
 
