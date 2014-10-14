@@ -2,20 +2,27 @@
 #
 # v 0.1
 
-FROM damon/base
+FROM debian:jessie
 
 # Install tcputils in order to use mini-inetd
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y tcputils
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        build-essential \
+        curl \
+        tcputils && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && \
+    apt-get autoremove -y
 
 # Download and install the stockfish engine
-ADD https://github.com/mcostalba/Stockfish/archive/master.tar.gz /tmp/sf.tar.gz
-RUN cd /tmp && tar xfz sf.tar.gz
-RUN cd /tmp/Stockfish-master/src && \
+RUN mkdir /tmp/stockfish && \
+    cd /tmp/stockfish && \
+    curl -SL "https://github.com/mcostalba/Stockfish/archive/master.tar.gz" | \
+        tar zx --strip-components=1 && \
+    cd src && \
     make profile-build ARCH=x86-64 && \
-    make install
-
-# Cleanup
-RUN rm -Rf /tmp/Stockfish-master /tmp/sf.tar.gz
+    make install && \
+    cd / && rm -Rf /tmp/stockfish
 
 # Expose the mini-inetd port
 EXPOSE 8080
